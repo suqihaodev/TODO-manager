@@ -4,6 +4,7 @@ console.log("TODO MANAGER \n")
 const readline = require('node:readline/promises')
 const { stdin, stdout } = require('node:process')
 
+const API_url = 'http://13.53.168.125:3000';
 
 
 /**
@@ -56,7 +57,7 @@ async function menu() {
  * @returns {Promise<void>} No retorna ningún valor, solo imprime los datos en la terminal.
  */
 async function view_tasks() {
-    const raw_res = await fetch("http://localhost:3000/view")
+    const raw_res = await fetch(`${API_url}/view`)
     const tasks = await raw_res.json()
 
     console.log("\n -------------- TASKS -------------- \n")
@@ -96,7 +97,7 @@ async function add_task() {
         completed: false
     }
 
-    const res = await fetch("http://localhost:3000/add", {
+    const res = await fetch(`${API_url}/add`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -134,7 +135,7 @@ async function delete_task() {
         return
     }
 
-    const res = await fetch("http://localhost:3000/delete", {
+    const res = await fetch(`${API_url}/delete`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -196,7 +197,7 @@ async function edit_task() {
     if (priority !== undefined) bodyData.priority = priority
     if (completed !== undefined) bodyData.completed = completed
 
-    const res = await fetch("http://localhost:3000/edit", {
+    const res = await fetch(`${API_url}/edit`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
