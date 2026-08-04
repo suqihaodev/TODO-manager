@@ -86,18 +86,24 @@ npm install
 node index.js
 ```
 
-### 2. Infraestructura Cloud (AWS EC2 + RDS)
+### Infraestructura Cloud (AWS EC2 + RDS)
 
-* **Conexión Servidor - Base de Datos**  
-  La conexión entre la API (EC2) y la base de datos (RDS PostgreSQL) se gestiona de forma asíncrona mediante un pool de conexiones (`pg.Pool`)
+* **Conexión Servidor - Base de Datos**
+
+  Para permitir el acceso, se configuró una regla de entrada en el **Security Group** de la RDS autorizando la entrada del EC2. De esta forma, la base de datos permanece aislada en la **subred privada** sin acceso a Internet para que acepte solo peticiones del servidor.
+  
+  La conexión entre la API (**EC2**) y la base de datos (**RDS PostgreSQL**) se gestiona de forma asíncrona mediante un pool de conexiones (`pg.Pool`).
 
 * **Configuración API (AWS EC2):** 
-  Se accedió a EC2 mediante **SSH** utilizando la clave privada (`.pem`). Dentro de la máquina virtual:
-    - Se instalaron las dependencias de **Node.js** 
-    - Se clonó el repositorio en la carpeta `server`
-    - Se creó el archivo `.env` con las credenciales de conexión a la RDS.
 
-    Finalmente, se desplegó el servidor utilizando PM2 para asegurar que el proceso se ejecute de forma ininterrumpida en segundo plano en la máquina virtual
+  Para habilitar el tráfico cliente, se añadió una regla de entrada en el Security Group de la EC2 permitiendo tráfico **HTTP/TCP** en el puerto `3000` desde cualquier origen
+  
+  Se accedió a EC2 mediante **SSH** utilizando la clave privada (`.pem`). Dentro de la máquina virtual:
+    - Se instalaron las dependencias de **Node.js**
+    - Se clonó el repositorio en la carpeta `server`
+    - Se creó el archivo `.env` con las **credenciales de conexión** a la RDS.
+
+    Finalmente, se desplegó el servidor utilizando **PM2** para que el proceso se ejecute de forma ininterrumpida en segundo plano dentro de la máquina virtual
 
 ```bash
 # 1. Conexión por SSH a la instancia EC2
